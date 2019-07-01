@@ -42,7 +42,7 @@ dnf install openssl-libs
 ```
 We don't depend on the larger OpenSSL package that includes the `openssl` application and other libraries. 
 
-To submit code to this respository install `uncrustify` from [uncrustify](https://github.com/uncrustify/uncrustify) somewhere in your `PATH`.
+If you plan to submit code to this respository, you should install `uncrustify` from [uncrustify](https://github.com/uncrustify/uncrustify) somewhere in your `PATH`.
 
 ### Componenets
 
