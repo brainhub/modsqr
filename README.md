@@ -1,4 +1,4 @@
-# Fast Modulo Squaring for  _Verifiable Delay Functions_, _Benchmarking, and more
+# Fast Modulo Squaring for  _Verifiable Delay Functions_, _Benchmarking_, and more
 > The goal of this project is to provide fast native code to perform modulo squaring on x86_64.
 
 The project currently offers 4 tools:
