@@ -1,5 +1,5 @@
 # Fast Modulo Squaring for  _Verifiable Delay Functions_, _Benchmarking_, and more
-> The goal of this project is to provide fast native code to perform modulo squaring on x86_64.
+> The goal of this project is to provide easy to use fast native code to perform modulo squaring on x86_64.
 
 The project currently offers 4 tools:
 1. Squaring API, consisting of 3 APIs in the form Init, Calculate, Free. This API is suitable for integration into other project code base.
@@ -19,12 +19,14 @@ The project currently offers 4 tools:
  - [Usage](#usage)
  - [API](#api)
  - [Style](#style)
+ - [License](#license)
  
 ## Background
 
-This project is helpful in _proving_ the [Simple Verifiable Delay Functions](https://eprint.iacr.org/2018/627) value and brute-force unlocking of the secret value. 
+This project is helpful in _proving_ a [Simple Verifiable Delay Functions](https://eprint.iacr.org/2018/627) value and brute-force unlocking of a secret value. 
 
 ## Building
+
 After cloning the project and changing directory into the location of this [README](README.md):
 ```
 make
@@ -34,7 +36,7 @@ make
 
 ### Dependencies
 
-This project relies on low-level OpenSSL library `libcrypto.so`. On Linux Fedora It can be installed as follows:
+This project relies on low-level OpenSSL library `libcrypto.so`. On Linux Fedora this library can be installed as follows:
 ```
 dnf install openssl-libs
 ```
@@ -123,4 +125,6 @@ make style
 
 [uncrustify](https://github.com/uncrustify/uncrustify) tool is needed for the above. 
 
+## License
 
+Standard Apache 2.0 license, matching the license of OpenSSL.
