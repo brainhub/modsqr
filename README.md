@@ -58,7 +58,7 @@ If you plan to submit code to this respository, you should install `uncrustify` 
 
 ### Command-line tool `sqr_test`
 
-Here is the sample output of this tool: 
+Here is the sample output of this tool on Ivy-bridge CPU architecture: 
 ```
 ./sqr_test
 CPU information:
