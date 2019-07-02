@@ -1,16 +1,15 @@
-# Fast Modulo Squaring for  _Verifiable Delay Functions_, _Benchmarking_, and more
+# Fast Modulo Squaring for _Verifiable Delay Functions_ and squaring or modulo exponentiation _Benchmarking_
 > The goal of this project is to provide easy to use fast native code to perform modulo squaring on x86_64.
 
 The project currently offers 4 tools:
-1. Squaring API, consisting of 3 APIs in the form Init, Calculate, Free. This API is suitable for integration into other project code base.
+1. Squaring API, consisting of 3 APIs in the form Init, Calculate, Free. This API is suitable for integration into other projects.
 2. `sqr_test` tool that provides:
    - Benchmarking of modulo square
    - Report on x86_64 CPU features that are important to achieve best performance
    - Suggests the VDF delay parameter `t`, such that it will take 1 day on the test machine to finish the calculation with this `t`
-5. `sqr` command line tool that allows calculation. This is currently the easiest way to interface with this project. 
-6. short example on how to integrate `sqr` with JavaScript
-
-2. The reference Prover code written in JavaScript that runs during self-tests.
+3. `sqr` command line tool that allows calculation. This is currently the easiest way to interface with this project. 
+4. Short example on how to integrate `sqr` with JavaScript
+5. The reference Prover code written in JavaScript that runs during self-tests.
 
 ## Table of Contents
  - [Background](#background)
@@ -24,6 +23,8 @@ The project currently offers 4 tools:
 ## Background
 
 This project is helpful in _proving_ a [Simple Verifiable Delay Functions](https://eprint.iacr.org/2018/627) value and brute-force unlocking of a secret value. 
+
+Because squaring is the main operation in modulo exponentiation, this project is a good estimate for modulo exponentiation operations, such as RSA decryption or encrption, DH modulo prime number, and many more complex protocols that perform exponentiation.
 
 ## Building
 
@@ -80,6 +81,36 @@ Estimated time to complete the next test is 47 seconds
 cycles for one square mod N: 4652
 
 x^2^2^36 will take approximately 1 day and 178.547 min (1.12399 day) to compute on this system (t=36)
+```
+
+Here is a sample run on a more recent PC. Notive that the warning with `IMPORTANT!` is gone and that the higher value of `t` is suggested by `sqr_test`. 
+
+```
+$ make test
+gcc -c -Wall -g  -O2 -I. -o sqrlib.o sqrlib.c
+gcc -c -Wall -g  -O2 -I. -o sqr_test.o test/sqr_test.c
+gcc -c -Wall -g  -O2 -I. -o cpuid.o test/cpuid.c
+gcc -lcrypto -o sqr_test sqrlib.o sqr_test.o cpuid.o -g
+./sqr_test
+CPU information:
+  Brand           : GenuineIntel
+  Brand           : Intel(R) Core(TM) i7-6800K CPU @ 3.40GHz
+  Features        : ebx=02100800 ecx=7ffefbbf edx=bfebfbff
+  Ext. features   : ebx=021cbfbb ecx=00000000 edx=9c000000
+  SSE2            : yes
+  AVX             : yes
+  MULX, ADX       : yes
+
+OpenSSL version: OpenSSL 1.1.1c FIPS  28 May 2019
+
+1.40689e+06 op/sec in 0.75 sec for x^2^2^20
+cycles for one square mod N: 2415
+
+Estimated time to complete the next test is 23 seconds
+1.50313e+06 op/sec in 22.32 sec for x^2^2^25
+cycles for one square mod N: 2260
+
+x^2^2^37 will take approximately 1 day and 83.9173 min (1.05828 day) to compute on this system (t=37)
 ```
 
 ### Command-line tool `sqr`
