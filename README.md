@@ -2,14 +2,13 @@
 > The goal of this project is to provide easy to use fast native code to perform modulo squaring on x86_64.
 
 The project currently offers 4 tools:
-1. Squaring API, consisting of 3 APIs in the form Init, Calculate, Free. This API is suitable for integration into other projects.
+1. Squaring library, consisting of the 3-function API in the form Init/Calculate/Free. This library is suitable for integration into other projects.
 2. `sqr_test` tool that provides:
-   - Benchmarking of modulo square
-   - Report on x86_64 CPU features that are important to achieve best performance
+   - Benchmarking of modulo squaring performance 
+   - Report on x86_64 CPU features that are important to achieve the top performance
    - Suggests the VDF delay parameter `t`, such that it will take 1 day on the test machine to finish the calculation with this `t`
-3. `sqr` command line tool that allows calculation. This is currently the easiest way to interface with this project. 
-4. Short example on how to integrate `sqr` with JavaScript
-5. The reference Prover code written in JavaScript that runs during self-tests.
+3. `sqr` command line tool to perform calculation. This is currently the easiest way to interface with this project. 
+4. A short example on how to integrate `sqr` with JavaScript
 
 ## Table of Contents
  - [Background](#background)
