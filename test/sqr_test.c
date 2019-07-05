@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <assert.h>
 
+#include <x86intrin.h>
+
 // for version info only
 #include <openssl/opensslv.h>
 #include <openssl/crypto.h>
@@ -46,9 +48,7 @@ const char * const m_2_2_20 =
 
 static inline uint64_t cycles()
 {
-    unsigned hi, lo;
-    __asm__ __volatile__ ("rdtsc" : "=a" (lo), "=d" (hi));
-    return ((unsigned long long)lo) | (((unsigned long long)hi) << 32);
+    return __rdtsc();
 }
 
 static uint64_t time_now() {
@@ -126,19 +126,19 @@ int main(int argc, const char * argv[])
         return 1;
     }
 
+    latest_t = 20;
     tbegin = time_now();
     cbegin = cycles();
-    err = sqr_calculate(state, ((uint64_t)1ULL) << 20, mhex, out, sizeof(out));
-    if( strcmp(out, m_2_2_20) != 0 ) {
-        printf("Failed in x^2^2^20:\n%s != \n%s\n", out, m_2_2_20);
+    err = sqr_calculate(state, ((uint64_t)1ULL) << latest_t, mhex, out, sizeof(out));
+    if( latest_t == 20 && strcmp(out, m_2_2_20) != 0 ) {
+        printf("Failed in x^2^2^%d:\n%s != \n%s\n", latest_t, out, m_2_2_20);
         sqr_free_state(state);
         return 1;
     }
     tend = time_now();
     cend = cycles();
-    printf("%g op/sec in %.02f sec for x^2^2^20\n",  (1 << 20) * 1000000. / (tend - tbegin), (tend - tbegin) / 1000000.);
-    printf("cycles for one square mod N: %lu\n", (cend - cbegin) / (1 << 20));
-    latest_t = 20;
+    printf("%g op/sec in %.02f sec for x^2^2^%d\n",  (1 << latest_t) * 1000000. / (tend - tbegin), (tend - tbegin) / 1000000., latest_t);
+    printf("cycles for one square mod N: %lu\n", (cend - cbegin) / (1 << latest_t));
 
     putchar('\n');
 
