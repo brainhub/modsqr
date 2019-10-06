@@ -1,14 +1,14 @@
 # Fast modulo squaring for modulo exponentiation
-This project provides fast native code to perform sequntial modulo squaring on x86_64. This code can also be used as a basis for modulo exponentiation in cryptographic libraries, given that squaring is the dominant portion of modulo squaring, which in turn is a building block of many cryptographic algorithms.
+This project provides fast native code to perform sequential modulo squaring on x86_64. This code can also be used as a basis for modulo exponentiation in cryptographic libraries, given that squaring is a dominant portion of modulo exponentiation, which in turn is a building block of many cryptographic algorithms.
 
-Currently the code performs operations in a 2048-bit integer field. This corresponds to a 2048-bit DH, 2048-bit [Verifiable Delay Function](https://eprint.iacr.org/2018/627), or 4096-bit RSA via [RSA CRT method](https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Using_the_Chinese_remainder_algorithm), to name a few.
+Currently the code performs operations in a 2048-bit integer field. This corresponds to a 2048-bit DH exponentiation, 2048-bit [Verifiable Delay Function](https://eprint.iacr.org/2018/627) calculation, or 4096-bit RSA via [RSA CRT method](https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Using_the_Chinese_remainder_algorithm), to name a few.
 
 The project currently offers 4 tools:
-1. Squaring library, consisting of the 3-function API in the form Init/Calculate/Free. This library is suitable for integration into other projects.
+1. A squaring library, consisting of a 3-function API in the form Init/Calculate/Free. This library is suitable for integration into other projects.
 2. `sqr_test` tool that provides:
    - Benchmarking of modulo squaring performance 
-   - Report on x86_64 CPU features that are important to achieve the top performance
-   - Suggests the VDF delay parameter `t`, such that it will take 1 day on to perform `2^t` squares on the test machine
+   - Report on x86_64 CPU features that are important to achieve top performance
+   - Estimate of the VDF delay parameter `t`, such that it will take 1 day on to perform `2^t` squares on the test machine
 3. `sqr` command-line tool to perform sequential squaring. This is the easiest way to interface with this project.
 4. A short example on how to integrate `sqr` with JavaScript
 
@@ -25,11 +25,11 @@ The project currently offers 4 tools:
 
 This project is helpful in _proving_ a [Simple Verifiable Delay Functions](https://eprint.iacr.org/2018/627) value and brute-force unlocking of a secret value. 
 
-Because squaring is the main operation in modulo exponentiation, the code in this project is a good timing tool for modulo exponentiation operations, such as RSA decryption or encryption, DH modulo prime number, and many more complex protocols that perform exponentiation modulo large integer.
+Because squaring is the main operation in modulo exponentiation, the code in this project is a good benchmarking tool to time modulo exponentiation operations, such as RSA decryption or encryption, DH in the modulo prime number field, and many more complex protocols that perform exponentiations modulo a large integer.
 
 ## Building
 
-After cloning the project and changing directory into the location of this [README](README.md):
+After cloning the project and changing the directory into the location of this [README](README.md), run:
 ```
 make
 ```
@@ -38,19 +38,19 @@ make
 
 ### Dependencies
 
-This project relies on low-level OpenSSL library `libcrypto.so`. On Linux Fedora this library can be installed as follows:
+This project relies on the low-level OpenSSL library `libcrypto.so`. On Linux Fedora this library can be installed as follows:
 ```
 dnf install openssl-libs
 ```
-We don't depend on the larger OpenSSL package that includes the `openssl` application and other libraries. 
+The code doesn't depend on the larger OpenSSL package that includes the `openssl` application and other libraries. 
 
-The AVX-512 code path has minimal OpenSSL dependencies and is used for conversion of input and output only. There is no OpenSSL APIs invoked in performance-critical code in the AVX-512 code path.
+The AVX-512 code path has minimal OpenSSL dependencies and is used for conversion of input and output only. There are no OpenSSL API functions invoked in performance-critical code on the AVX-512 code path.
 
-If you plan to submit code to this respository, you should install `uncrustify` from [uncrustify](https://github.com/uncrustify/uncrustify) somewhere in your `PATH`.
+If you plan to contribute code to this respository, you should install `uncrustify` from [uncrustify](https://github.com/uncrustify/uncrustify) somewhere in your `PATH`.
 
 ### Componenets
 
-1. The library, consisting of the files `sqrlib.c` and `sqrlib.h`.
+1. The library `sqrlib.a` with the API interface defined in `sqrlib.h`.
 2. `sqr` command line tool to perform production-time calculation
 3. `sqr_test` benchmarking and testing tool that can also be invoked as 
    ```
@@ -62,7 +62,7 @@ If you plan to submit code to this respository, you should install `uncrustify` 
 
 ### Command-line tool `sqr_test`
 
-Here is the sample output of this tool on Ivy-bridge CPU architecture: 
+Here is a sample output of this tool on an Ivy Bridge CPU architecture: 
 ```
 $ ./sqr_test 
 CPU information:
@@ -87,7 +87,7 @@ cycles for one square mod N: 4562
 x^2^2^36 will take approximately 1 day and 146.972 min (1.10206 day) to compute on this system (t=36)
 ```
 
-Here is a sample run on a more recent PC. Notice the warnings with `LOW PERFORMANCE` is gone, but `IMPORTANT!` remains. A higher value of `t` is suggested by `sqr_test`. 
+Here is a sample run on a more recent CPU. Notice that the warning with `LOW PERFORMANCE` is gone, but the one with `IMPORTANT!` remains. A higher value of `t` is suggested by the `sqr_test`. 
 
 ```
 $ make test
@@ -114,7 +114,7 @@ cycles for one square mod N: 2260
 x^2^2^37 will take approximately 1 day and 83.9173 min (1.05828 day) to compute on this system (t=37)
 ```
 
-Finally, here is a test on AVX-512 capable PC:
+Finally, here is a test on a AVX-512-capable CPU:
 
 ```
 $ ./sqr_test 
@@ -156,7 +156,7 @@ Takes three arguments:
 - `Nl` - the size of the    modulus
 - `state` - the created object
 
-The function initializes the state, doing all needed pre-calculations specific to `N`. 
+The function initializes the state, doing all needed pre-calculations that are specific to `N`. 
 
 ### sqr_calculate
 Takes five arguments:
@@ -166,7 +166,7 @@ Takes five arguments:
 - `outhex` - output buffer
 - `outl` - output buffer size in bytes
 
-The function calculates `x^2^T mod N`, returning results as hexadecimal '\0'-terminated string that is exactly `Nl*2` characters long.
+The function calculates `x^2^T mod N`, returning results as a hexadecimal '\0'-terminated string that is exactly `Nl*2` characters long.
 
 ### sqr_free
 Takes one arguments:
