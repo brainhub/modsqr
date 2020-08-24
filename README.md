@@ -12,6 +12,10 @@ The project currently offers 4 tools:
 3. `sqr` command-line tool to perform sequential squaring. This is the easiest way to interface with this project.
 4. A short example on how to integrate `sqr` with JavaScript
 
+To the best of my knowledge, as of 2019, this is the **fastest code** publicly available to square on x86 CPU architecture, at **771 cycles** per square. 
+
+The major contribution of this project is the use of AVX-512 instruction set for modulo squaring operation. 
+
 ## Table of Contents
  - [Background](#background)
  - [Building](#building)
